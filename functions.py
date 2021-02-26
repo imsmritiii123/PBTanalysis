@@ -165,45 +165,38 @@ def nearest_stations(route, stations, maxDistance=100, drop_duplicates=True):
         return route
 
 def parse_kml(filename):
+    route = {}
     with open(filename, "r") as content:
         soup = BeautifulSoup(content, "lxml-xml")
-    route_name = soup.find('name').text
-    full_route = soup.find('description').text
+    route['name'] = soup.find('name').text
+    route['full_name'] = soup.find('description').text
     folders = soup.findAll('Folder')
-    stop_names = []
-    stop_coordinates = []
-    
+
     route_coordinates = []
     
     for folder in folders:
-        folder_name = folder.find('name').text.split(' ')[0]
-        if folder_name == 'Bus':
+        folder_name = folder.find('name').text
+        if folder_name == 'Bus Stops':
+            stop_names = []
+            stop_coordinates = []
             for point in folder.findAll('Placemark'):
                 stop_name = point.find('name').text
                 coordinate = point.find('coordinates').text
                 stop_names.append(stop_name)
                 stop_coordinates.append(coordinate)
+            stop_coordinates = [coordinate.split(',')[:-1] for coordinate in stop_coordinates]
+            stop_lons = np.array([float(coordinate[0]) for coordinate in stop_coordinates])
+            stop_lats = np.array([float(coordinate[1]) for coordinate in stop_coordinates])
+            route['stops'] = pd.DataFrame({'name': stop_names, 'longitude': stop_lons, 'latitude': stop_lats})       
         
-        elif folder_name == 'Directions':
+        else:
             route_coordinates = folder.find('LineString').coordinates.text.split('\n')
-            
-    if len(stop_coordinates)>1:
-        stop_coordinates = [coordinate.split(',')[:-1] for coordinate in stop_coordinates]
-        stop_lons = np.array([float(coordinate[0]) for coordinate in stop_coordinates])
-        stop_lats = np.array([float(coordinate[1]) for coordinate in stop_coordinates])
-   
-    if len(route_coordinates)>1:
-        route_coordinates = [coordinate.strip() for coordinate in route_coordinates][1:-1]
-        route_coordinates = [coordinate.split(',')[:-1] for coordinate in route_coordinates]
-        route_lons = np.array([float(coordinate[0]) for coordinate in route_coordinates])
-        route_lats = np.array([float(coordinate[1]) for coordinate in route_coordinates])
-        df = pd.DataFrame({'latitude': route_lats, 'longitude': route_lons})
-    
-    route_coordinates = pd.DataFrame({'longitude': route_lons, 'latitude': route_lats})
-    if len(stop_coordinates)>1:
-        route_stops = pd.DataFrame({'names': stop_names, 'longitude': stop_lons, 'latitude': stop_lats})    
-        return [route_name, full_route, route_stops, route_coordinates]
-    return [route_name, full_route, route_coordinates]
+            route_coordinates = [coordinate.strip() for coordinate in route_coordinates][1:-1]
+            route_coordinates = [coordinate.split(',')[:-1] for coordinate in route_coordinates]
+            route_lons = np.array([float(coordinate[0]) for coordinate in route_coordinates])
+            route_lats = np.array([float(coordinate[1]) for coordinate in route_coordinates])
+            route[folder_name] = pd.DataFrame({'longitude': route_lons, 'latitude': route_lats}) 
+    return route
 
 def check_endpoint(df, endpoint0, endpoint1, cropToEndpoints=True):
     df.sort_values(['last_update'], inplace=True)
