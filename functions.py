@@ -1,5 +1,7 @@
 def bus_df(bus_id):
-    return df_full[df_full['bus_id']==bus_id]
+    df = df_full[df_full['bus_id']==bus_id]
+    df.drop_duplicates(subset='last_update', inplace=True)
+    return df
 
 def plot_on_map(df, BB, map_, s=10, alpha=0.1):
     fig, axs = plt.subplots(figsize=(200*(BB[1]-BB[0]), 200*(BB[3]-BB[2])))
@@ -31,11 +33,13 @@ def movement_days(bus):
     movement_days = []
     for day in days:
         df_temp = bus_day_df(bus, day)
-        df_temp_del_lat = df_temp['latitude'].max() - df_temp['latitude'].min()
-        df_temp_del_lon = df_temp['longitude'].max() - df_temp['longitude'].min()
-        df_temp_del = min(df_temp_del_lat*1000, df_temp_del_lon*1000)
-        if (df_temp.shape[0]>100 and df_temp_del>1.5):
-            movement_days.append(day)
+        if df_temp.shape[0]>50:
+            lat1 = df_temp['latitude'].max()
+            lat2 = df_temp['latitude'].min()
+            lon1 = df_temp['longitude'].max()
+            lon2 = df_temp['longitude'].min()
+            if distance(lat1, lon1, lat2, lon2) > 5000:
+                movement_days.append(day)
     return movement_days
 
 def plot_movement(bus):
@@ -49,6 +53,9 @@ def plot_movement(bus):
     
 
 def animate_df(df):
+    print('For {} datapoints'.format(df.shape[0]))
+    df.drop_duplicates(subset='last_update', inplace=True)
+    print('For {} datapoints'.format(df.shape[0]))
     x_data = df['longitude'].values
     y_data = df['latitude'].values
 
@@ -79,6 +86,7 @@ def bus_movement_days():
     buses = df_full['bus_id'].unique()
     m_days = {}
     for bus in buses:
+        print('Calculating movement days for bus {}'.format(bus))
         m_days[bus] = movement_days(bus)
     return m_days
 
@@ -198,6 +206,7 @@ def parse_kml(filename):
             route[folder_name] = pd.DataFrame({'longitude': route_lons, 'latitude': route_lats}) 
     return route
 
+
 def check_endpoint(df, endpoint0, endpoint1, cropToEndpoints=True):
     df.sort_values(['last_update'], inplace=True)
     df['Endpoint0'] = df['name']==endpoint0
@@ -303,40 +312,30 @@ def generate_training_data_alt(df_tmp):
             continue
         dfs.append(df)
     return pd.concat(dfs)
-
-def route_final(route, df):
-    if route=='lagankhel-nayabuspark' or route=='nayabuspark-lagankhel' or route=='Lagankhel-NayaBusPark' or route=='Lagankhel-Buspark':
-        stations_in_route = parse_kml('./Bus Routes/Lagankhel-NayaBusPark.kml', getStops=True, drop_duplicates=True, maxDistance=50)
-        df = nearest_stations(df, stations_in_route, drop_duplicates=False)
-        df.drop_duplicates(subset='last_update', inplace=True)
-        stations_in_route.reset_index(inplace=True)
-        stations_in_route = stations_in_route.append({'name': 'Lainchaur Bus Stop', 'latitude': 27.716467, 'longitude': 85.315898, 'distance':0 }, ignore_index=True)
-        stations_in_route = stations_in_route.append({'name': 'Panipokhari Bus Stop', 'latitude': 27.728172, 'longitude': 85.324627,'distance':0 }, ignore_index=True)
-        stations_in_route= stations_in_route.iloc[[0, 1, 4, 5, 6, 8, 9, 10, 12, -2, 13, -1, 15, 17,18,21,23,24,25]]
-        a = [bus for bus in buses.loc[87]['route_full'].split('-')]
-        a.insert(-3,'Chauki (Basundhara)')
-        stations_in_route['name'] = a
-        return stations_in_route
     
-def generate_training_data_for_bus(bus):
+def generate_all_training_data():
+    movements = bus_movement_days()
     dfs_outer = []
-    df = bus_df(bus)
-    days = movement_days(bus)
-    for day in days:
-        df = bus_day_df(bus, day)
-        df.drop_duplicates(subset='last_update', inplace=True)
-        stations_in_route = route_final('lagankhel-nayabuspark', df)
-        df = nearest_stations(df, stations_in_route, drop_duplicates=False)
-        dfs = []
-        tours = generate_tours(df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
-        print('Bus: {} - Day: {} - Tours: {}  '.format(bus,day, len(tours)))
-        for tour in tours:
-            df = generate_training_data_alt(tour)
-            dfs.append(df)
-        if len(dfs)<1:
-            continue
-        df_outer = pd.concat(dfs)
-        dfs_outer.append(df_outer)
+    for bus in movements:
+        dfs_inner = []
+        kml_file = 'Bus Routes/' + buses.loc[bus]['route_short'] + '.kml'
+        stations_in_route = parse_kml(kml_file)['stops']
+        for day in movements[bus]:
+            df = bus_day_df(bus, day)
+            df = nearest_stations(df, stations_in_route, drop_duplicates=False)
+            dfs = []
+            tours = generate_tours(df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
+            print('Bus: {} - Day: {} - Tours: {}  '.format(bus,day, len(tours)))
+            for tour in tours:
+                df = generate_training_data_alt(tour)
+                dfs.append(df)
+            if len(dfs)<1:
+                continue
+            df_inner = pd.concat(dfs)
+            dfs_inner.append(df_inner)
+        if len(dfs_inner)>0:  
+            df_outer = pd.concat(dfs_inner)
+            dfs_outer.append(df_outer)
     train = pd.concat(dfs_outer)
     train['Segment'] = train['from'] + ' - ' + train['to']
     train.set_index('Segment', inplace=True)
@@ -348,14 +347,3 @@ def generate_training_data_for_bus(bus):
     train['Duration'] = (train['End'] - train['Start']).dt.seconds
     train.drop(columns=['from', 'to', 'End'], inplace=True)
     return train
-
-def generate_training_data_for_buses(buses):
-    dfs_outer = []
-    for bus in buses:
-        df = generate_training_data_for_bus(bus)
-        dfs_outer.append(df)
-    train = pd.concat(dfs_outer)
-    segments = {}
-    for segment in train.index.unique():
-        segments[segment] = train.loc[segment]
-    return segments
