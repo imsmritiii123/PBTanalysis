@@ -1,8 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Godawari - Ratnapark</name>
+    <name>Godawari-Ratnapark</name>
     <description>Godawari-taukhel-bodegaun-thaiba-harisiddi-satdobato-lagankhel-kumaripati-jawalakhel-phulchowk-hariharbhawan-kupoldol-tripureshwor-nepalbayusewa-ratnapark</description>
+    <Style id="icon-1899-0288D1-nodesc-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-nodesc-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
     <Style id="icon-1899-DB4436-nodesc-normal">
       <IconStyle>
         <color>ff3644db</color>
@@ -74,125 +116,188 @@
       </Pair>
     </StyleMap>
     <Folder>
-      <name>Untitled layer</name>
+      <name>Bus Stops</name>
+      <Placemark>
+        <name>Godawari Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3645151,27.6047985,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Toukhel Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3574878,27.6114845,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Badegaun Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3527081,27.6178016,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thaiba Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3480585,27.6247245,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Harisiddhi Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3405394,27.6374972,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hattiban Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3356957,27.6480354,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dhapakhel Dobato Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3262335,27.6571241,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Patan Industrial Estate</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3239269,27.6624633,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Patan Hospital Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3216529,27.6683439,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kumaripati Agnishal</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.320484,27.6706587,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Manbhawan Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3159534,27.6721328,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jawalakhel Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3141164,27.6724723,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pulchowk Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.316171,27.6767823,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hariharbhawan Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3173974,27.6810722,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kupondole Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3163025,27.6878413,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tripureshwor Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3144424,27.693558,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NAC Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3135183,27.702504,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bir Hospital Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3142276,27.7057169,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ratna Park Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3147485,27.7067801,0
+          </coordinates>
+        </Point>
+      </Placemark>
     </Folder>
     <Folder>
-      <name>Directions from Godawari Bus Stop, Godawari to Ratnapark Bus Stop, Ratna Park Path, Kathmandu</name>
+      <name>Directions from Satdobato-Godavari Rd, Godawari 44709, Nepal to Ratna Park Bus Stop, Ratna Park Road Ratna Park, काठमाडौँ 44600, Nepal</name>
       <Placemark>
-        <name>Directions from Godawari Bus Stop, Godawari to Ratnapark Bus Stop, Ratna Park Path, Kathmandu</name>
+        <name>Directions from Satdobato-Godavari Rd, Godawari 44709, Nepal to Ratna Park Bus Stop, Ratna Park Road Ratna Park, काठमाडौँ 44600, Nepal</name>
         <styleUrl>#line-1267FF-5000-nodesc</styleUrl>
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            85.37817,27.59453,0
-            85.37831,27.59425,0
-            85.37822,27.59425,0
-            85.37812,27.59428,0
-            85.37799,27.59435,0
-            85.37781,27.59448,0
-            85.37745,27.59475,0
-            85.37712,27.59496,0
-            85.37698,27.59503,0
-            85.37677,27.59514,0
-            85.37634,27.59535,0
-            85.37571,27.59565,0
-            85.37562,27.5957,0
-            85.3756,27.59571,0
-            85.37546,27.59575,0
-            85.37528,27.59581,0
-            85.37522,27.59582,0
-            85.37504,27.59587,0
-            85.37501,27.59587,0
-            85.37484,27.59588,0
-            85.37479,27.59589,0
-            85.37468,27.59588,0
-            85.37458,27.59588,0
-            85.37424,27.59581,0
-            85.37403,27.59577,0
-            85.37373,27.59571,0
-            85.3736,27.5957,0
-            85.37348,27.59569,0
-            85.37338,27.59571,0
-            85.37324,27.59573,0
-            85.37317,27.59574,0
-            85.37297,27.59578,0
-            85.37284,27.59578,0
-            85.37261,27.59579,0
-            85.37253,27.5958,0
-            85.37244,27.59585,0
-            85.37242,27.59589,0
-            85.37238,27.59592,0
-            85.37237,27.59602,0
-            85.37234,27.59626,0
-            85.37231,27.59639,0
-            85.37222,27.59655,0
-            85.37221,27.59656,0
-            85.37158,27.59739,0
-            85.37153,27.59746,0
-            85.37141,27.59761,0
-            85.37128,27.59779,0
-            85.37085,27.59836,0
-            85.37078,27.59846,0
-            85.37071,27.59853,0
-            85.37059,27.59866,0
-            85.37041,27.59883,0
-            85.37021,27.59901,0
-            85.37005,27.59916,0
-            85.36999,27.59922,0
-            85.36995,27.59926,0
-            85.36976,27.59943,0
-            85.36955,27.59962,0
-            85.36934,27.59982,0
-            85.36927,27.59989,0
-            85.36921,27.59994,0
-            85.36914,27.6,0
-            85.36892,27.60021,0
-            85.36891,27.60022,0
-            85.36885,27.60027,0
-            85.36879,27.60033,0
-            85.36868,27.60043,0
-            85.36846,27.60063,0
-            85.36825,27.60082,0
-            85.36807,27.60099,0
-            85.36799,27.60106,0
-            85.36789,27.60114,0
-            85.36766,27.6013,0
-            85.36749,27.60142,0
-            85.36737,27.6015,0
-            85.36709,27.60171,0
-            85.36683,27.60189,0
-            85.36662,27.60203,0
-            85.36658,27.60206,0
-            85.36641,27.60216,0
-            85.36626,27.60228,0
-            85.36625,27.60229,0
-            85.36613,27.60239,0
-            85.36612,27.6024,0
-            85.36603,27.60252,0
-            85.36602,27.60253,0
-            85.36594,27.60265,0
-            85.36585,27.60278,0
-            85.36578,27.60287,0
-            85.36572,27.60296,0
-            85.36568,27.60301,0
-            85.3656,27.60312,0
-            85.36551,27.60321,0
-            85.36546,27.60327,0
-            85.36533,27.60338,0
-            85.36518,27.6035,0
-            85.36516,27.60352,0
-            85.36505,27.60362,0
-            85.36498,27.60369,0
-            85.3649,27.60376,0
-            85.36476,27.60389,0
-            85.36461,27.60402,0
-            85.3645,27.60413,0
-            85.36436,27.60426,0
-            85.36419,27.6044,0
-            85.36412,27.60448,0
-            85.36405,27.60456,0
-            85.36403,27.60458,0
-            85.364,27.60463,0
+            85.36396,27.60469,0
             85.36393,27.60474,0
             85.36385,27.6049,0
             85.36374,27.60512,0
@@ -863,29 +968,25 @@
             85.31437,27.70689,0
             85.31442,27.7069,0
             85.31453,27.70694,0
-            85.31518,27.7067,0
-            85.31551,27.70658,0
-            85.31547,27.70669,0
-            85.31546,27.70672,0
-            85.31535,27.70676,0
+            85.31493,27.70679,0
           </coordinates>
         </LineString>
       </Placemark>
       <Placemark>
-        <name>Godawari Bus Stop, Godawari</name>
+        <name>Satdobato-Godavari Rd, Godawari 44709, Nepal</name>
         <styleUrl>#icon-1899-DB4436-nodesc</styleUrl>
         <Point>
           <coordinates>
-            85.378169,27.5945292,0
+            85.3639648,27.604686,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Ratnapark Bus Stop, Ratna Park Path, Kathmandu</name>
+        <name>Ratna Park Bus Stop, Ratna Park Road Ratna Park, काठमाडौँ 44600, Nepal</name>
         <styleUrl>#icon-1899-DB4436-nodesc</styleUrl>
         <Point>
           <coordinates>
-            85.3153519,27.7067561,0
+            85.3149314,27.7067913,0
           </coordinates>
         </Point>
       </Placemark>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Lagankhel-NayaBusPark</name>
-    <description>Lagankhel-Kumaripati-Jawalakhel-Pulchwok-Hariharbhawan-Kupandol-Tripureshwor-Nepal Bayusewa-Jamal-Lainchaur-Lazimpat-Panipokhari-Teaching Hospital-Narayangopal Chwok-Basundhara-Samakhusi-Gongabu-Naya Buspark</description>
+    <name>Lagankhel-Budhanilkantha</name>
+    <description>Lagankhel-Kumaripati-Jawalakhel-Pulchwok-Harihar Bhawan-Kupandol-Tripureshwor-Jamal-Lainchaur-Lazimpat-Panipokhari-Narayangopal Chwok-Gangalal Hosppital-Nuero Hospital-Golfutar-Hattigauda-Dewba Chwok-Budhanilakantha</description>
     <Style id="icon-1899-0288D1-normal">
       <IconStyle>
         <color>ffd18802</color>
@@ -152,11 +152,19 @@
       </Pair>
     </StyleMap>
     <Folder>
-      <name>Bus Stops</name>
+      <name>Untitled layer</name>
+      <Placemark>
+        <name>Lagankhel Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3231529,27.6672915,0
+          </coordinates>
+        </Point>
+      </Placemark>
       <Placemark>
         <name>Patan Hospital Bus Stop</name>
-        <description>Sincha, Lagankhel</description>
-        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
         <Point>
           <coordinates>
             85.3216529,27.6683439,0
@@ -165,8 +173,7 @@
       </Placemark>
       <Placemark>
         <name>Kumaripati Agnishal</name>
-        <description>Kumaripati</description>
-        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
         <Point>
           <coordinates>
             85.320484,27.6706587,0
@@ -210,8 +217,18 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Kupondole Bus Stop</name>
+        <name>Nabil Bank Bus Stop</name>
         <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3183963,27.6829116,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kupondole Bus Stop</name>
+        <description>Kupondole</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
             85.3163025,27.6878413,0
@@ -219,17 +236,9 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Tripureshwor Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            85.3144424,27.693558,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
         <name>NAC Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <description>Sundhara</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
             85.3135183,27.702504,0
@@ -237,8 +246,8 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Jamal Bus Stop</name>
-        <description>Kanti Path</description>
+        <name>Kanti Path Bus Stop</name>
+        <description>Jamal</description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
@@ -248,7 +257,8 @@
       </Placemark>
       <Placemark>
         <name>Lazimpat Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <description>Lazimpat</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
             85.3198086,27.7210521,0
@@ -256,7 +266,7 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Teaching Bus Stop</name>
+        <name>Teaching Hospital Bus Stop</name>
         <description>Maharajgunj</description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
@@ -266,7 +276,16 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Narayan Gopal Chowk </name>
+        <name>Panipokhari Bus Stop</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            85.3237182,27.7277511,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Narayan Gopal Chowk</name>
         <description>Maharajgunj</description>
         <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
@@ -276,74 +295,127 @@
         </Point>
       </Placemark>
       <Placemark>
-        <name>Basundhara Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <name>Sahid Gangalal Hospital Bus Stop</name>
+        <description>Bansbari </description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
-            85.3322992,27.7422217,0
+            85.3423437,27.745686,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Basundhara Chauki Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <name>Neuro Hospital Bus Stop</name>
+        <description>Bansbari </description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
-            85.3249367,27.7380845,0
+            85.345218,27.748501,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Taalim Kendra Bus Stop</name>
+        <name>Golfutar Bus Stop</name>
         <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
         <Point>
           <coordinates>
-            85.32208,27.736161,0
+            85.3457558,27.7509905,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Samakhusi Chowk Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <name>Hattigauda Bus Stop</name>
+        <description>Khadka Bhadrakali Road, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
-            85.3181338,27.7352209,0
+            85.3490507,27.7562443,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Gongabu Bus Stop</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <name>Chandranagar Chowk </name>
+        <description>Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
-            85.3145644,27.7348846,0
+            85.3537996,27.7649793,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Naya Bus Park</name>
-        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <name>Ghumti Bus Stop</name>
+        <description>Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
         <Point>
           <coordinates>
-            85.3081285,27.732436,0
+            85.3539205,27.7665134,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Chapali Bus Stop</name>
+        <description>Golfutar Main Road, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            85.3558302,27.7676109,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rudreshwor Chowk </name>
+        <description>Golfutar Main Road, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            85.3586724,27.7714477,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Naya Chowk </name>
+        <description>Golfutar Main Road, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            85.3596228,27.7725713,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Deuba Chowk </name>
+        <description>Panchakanya Marga, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            85.3610981,27.7748389,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Budhanilkantha Bus Station</name>
+        <description>Golfutar Road, Budhanilkantha</description>
+        <styleUrl>#icon-1899-0288D1</styleUrl>
+        <Point>
+          <coordinates>
+            85.361121,27.777973,0
           </coordinates>
         </Point>
       </Placemark>
     </Folder>
     <Folder>
-      <name>Directions from Lagankhel, Lalitpur to Naya Bus Park, Kathmandu</name>
+      <name>Directions from Lagankhel Bus Station, Lalitpur to बुढानिलकण्ठ बस स्टेशन, Golfutar Road, Budhanilkantha 44600, Nepal</name>
       <Placemark>
-        <name>Directions from Lagankhel, Lalitpur to Naya Bus Park, Kathmandu</name>
+        <name>Directions from Lagankhel Bus Station, Lalitpur to बुढानिलकण्ठ बस स्टेशन, Golfutar Road, Budhanilkantha 44600, Nepal</name>
         <styleUrl>#line-1267FF-5000-nodesc</styleUrl>
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            85.32255,27.66572,0
-            85.322,27.66591,0
-            85.32242,27.66674,0
-            85.32245,27.66682,0
-            85.32248,27.66686,0
-            85.32252,27.66696,0
+            85.32353,27.66721,0
+            85.32349,27.66707,0
+            85.32333,27.6668,0
+            85.32286,27.66693,0
             85.32254,27.66702,0
             85.3224,27.66713,0
             85.32237,27.66715,0
@@ -788,139 +860,205 @@
             85.33653,27.73944,0
             85.33699,27.73995,0
             85.33706,27.74003,0
-            85.33699,27.74006,0
-            85.33612,27.7405,0
-            85.33359,27.74176,0
-            85.33349,27.74181,0
-            85.33334,27.74188,0
-            85.33318,27.74194,0
-            85.33305,27.74198,0
-            85.33293,27.74201,0
-            85.33278,27.74202,0
-            85.33264,27.74203,0
-            85.33262,27.74203,0
-            85.33251,27.74203,0
-            85.33237,27.74203,0
-            85.33223,27.74202,0
-            85.33205,27.74199,0
-            85.33189,27.74196,0
-            85.33174,27.74191,0
-            85.33159,27.74186,0
-            85.33146,27.74179,0
-            85.33121,27.74165,0
-            85.33106,27.74157,0
-            85.32943,27.74059,0
-            85.32933,27.74053,0
-            85.32562,27.73825,0
-            85.32521,27.738,0
-            85.32361,27.73703,0
-            85.32301,27.7367,0
-            85.32282,27.73658,0
-            85.3223,27.73624,0
-            85.32216,27.73615,0
-            85.32205,27.73608,0
-            85.32187,27.73597,0
-            85.32164,27.73585,0
-            85.32146,27.73576,0
-            85.32124,27.73565,0
-            85.32101,27.73555,0
-            85.32091,27.7355,0
-            85.32081,27.73547,0
-            85.32077,27.73545,0
-            85.32045,27.73534,0
-            85.32027,27.73529,0
-            85.32015,27.73526,0
-            85.32,27.73523,0
-            85.31962,27.73516,0
-            85.31943,27.73513,0
-            85.31938,27.73512,0
-            85.31918,27.7351,0
-            85.31894,27.73508,0
-            85.31861,27.73506,0
-            85.31848,27.73505,0
-            85.31845,27.73505,0
-            85.31812,27.73504,0
-            85.31771,27.73502,0
-            85.31722,27.73499,0
-            85.31696,27.73499,0
-            85.3167,27.73498,0
-            85.31643,27.73497,0
-            85.31617,27.73496,0
-            85.31614,27.73495,0
-            85.31592,27.73494,0
-            85.31573,27.73493,0
-            85.31451,27.73484,0
-            85.31373,27.7348,0
-            85.31357,27.7348,0
-            85.3123,27.73475,0
-            85.31189,27.73473,0
-            85.3115,27.73472,0
-            85.31119,27.73472,0
-            85.31088,27.73472,0
-            85.31062,27.73474,0
-            85.31047,27.73476,0
-            85.31019,27.73478,0
-            85.31004,27.7348,0
-            85.30989,27.73482,0
-            85.30974,27.73484,0
-            85.30958,27.73486,0
-            85.30942,27.73488,0
-            85.30924,27.73491,0
-            85.30887,27.73498,0
-            85.30842,27.73504,0
-            85.30834,27.73499,0
-            85.30831,27.73497,0
-            85.30829,27.73494,0
-            85.30827,27.73488,0
-            85.30823,27.73467,0
-            85.30819,27.73443,0
-            85.30818,27.73434,0
-            85.30818,27.7343,0
-            85.30816,27.73405,0
-            85.30816,27.73403,0
-            85.30817,27.73402,0
-            85.30817,27.734,0
-            85.30818,27.73399,0
-            85.30822,27.73396,0
-            85.30825,27.73395,0
-            85.3083,27.73394,0
-            85.30835,27.73393,0
-            85.30897,27.73388,0
-            85.30902,27.73388,0
-            85.30904,27.73387,0
-            85.30905,27.73387,0
-            85.30906,27.73386,0
-            85.30907,27.73384,0
-            85.30908,27.73383,0
-            85.30908,27.73381,0
-            85.30909,27.7338,0
-            85.30909,27.73378,0
-            85.30909,27.73374,0
-            85.30907,27.73369,0
-            85.30906,27.73357,0
-            85.30905,27.73346,0
-            85.30904,27.73334,0
-            85.30898,27.73257,0
-            85.30896,27.73234,0
-            85.30813,27.73239,0
+            85.3371,27.74007,0
+            85.33717,27.74014,0
+            85.33723,27.7402,0
+            85.33749,27.74048,0
+            85.338,27.74102,0
+            85.33838,27.74141,0
+            85.33855,27.74159,0
+            85.33898,27.74203,0
+            85.33914,27.7422,0
+            85.33924,27.74229,0
+            85.33958,27.7427,0
+            85.34,27.74317,0
+            85.34021,27.74341,0
+            85.3403,27.74352,0
+            85.34102,27.74431,0
+            85.34179,27.74515,0
+            85.34184,27.74521,0
+            85.34231,27.74565,0
+            85.34234,27.74568,0
+            85.34277,27.74614,0
+            85.34309,27.74645,0
+            85.34337,27.74668,0
+            85.34366,27.74691,0
+            85.34374,27.74698,0
+            85.344,27.74721,0
+            85.34425,27.74742,0
+            85.34428,27.74744,0
+            85.34469,27.74773,0
+            85.3448,27.74781,0
+            85.3449,27.74791,0
+            85.34497,27.74799,0
+            85.34506,27.74809,0
+            85.34517,27.74825,0
+            85.34522,27.74834,0
+            85.3453,27.74848,0
+            85.34534,27.74862,0
+            85.34538,27.74878,0
+            85.3454,27.74891,0
+            85.34542,27.74902,0
+            85.34545,27.74938,0
+            85.34547,27.74953,0
+            85.34548,27.74961,0
+            85.34547,27.74985,0
+            85.34546,27.74997,0
+            85.34545,27.75011,0
+            85.34545,27.75032,0
+            85.34551,27.7506,0
+            85.3456,27.75081,0
+            85.34574,27.75109,0
+            85.34577,27.75114,0
+            85.34623,27.75194,0
+            85.34645,27.75231,0
+            85.34652,27.75242,0
+            85.34662,27.75258,0
+            85.34676,27.75279,0
+            85.34711,27.75325,0
+            85.34712,27.75326,0
+            85.3474,27.75365,0
+            85.34751,27.75382,0
+            85.34764,27.75404,0
+            85.34776,27.75423,0
+            85.34789,27.75444,0
+            85.34808,27.75475,0
+            85.3482,27.75495,0
+            85.34831,27.75513,0
+            85.34837,27.75522,0
+            85.34857,27.75556,0
+            85.34868,27.75575,0
+            85.34882,27.75598,0
+            85.34896,27.75622,0
+            85.34897,27.75624,0
+            85.34931,27.75685,0
+            85.34933,27.75689,0
+            85.34938,27.75697,0
+            85.34957,27.75724,0
+            85.35006,27.75801,0
+            85.35063,27.75889,0
+            85.35066,27.75893,0
+            85.35075,27.75906,0
+            85.35123,27.75977,0
+            85.35154,27.76023,0
+            85.35159,27.7603,0
+            85.35177,27.76061,0
+            85.35183,27.76072,0
+            85.35184,27.76074,0
+            85.35186,27.76077,0
+            85.35188,27.76081,0
+            85.35195,27.76096,0
+            85.35217,27.76146,0
+            85.3524,27.76196,0
+            85.35249,27.76216,0
+            85.35264,27.76249,0
+            85.35324,27.76376,0
+            85.35332,27.76394,0
+            85.35339,27.7641,0
+            85.3535,27.76432,0
+            85.35359,27.76453,0
+            85.35362,27.76462,0
+            85.35365,27.76484,0
+            85.35366,27.76492,0
+            85.35364,27.76501,0
+            85.35362,27.76509,0
+            85.35357,27.76523,0
+            85.35346,27.76545,0
+            85.35342,27.7656,0
+            85.35341,27.76564,0
+            85.35341,27.76567,0
+            85.3534,27.76569,0
+            85.35341,27.76573,0
+            85.35344,27.76583,0
+            85.35346,27.7659,0
+            85.35349,27.76598,0
+            85.35356,27.76608,0
+            85.35362,27.76617,0
+            85.35382,27.76647,0
+            85.35413,27.7667,0
+            85.35436,27.76683,0
+            85.35449,27.76691,0
+            85.35478,27.76708,0
+            85.35526,27.76735,0
+            85.35539,27.76742,0
+            85.35554,27.7675,0
+            85.3556,27.76753,0
+            85.35572,27.76764,0
+            85.35585,27.76775,0
+            85.35601,27.76793,0
+            85.35611,27.76804,0
+            85.35624,27.76819,0
+            85.35641,27.76841,0
+            85.35647,27.76849,0
+            85.35744,27.7698,0
+            85.35766,27.77009,0
+            85.35774,27.7702,0
+            85.35782,27.77031,0
+            85.35813,27.77072,0
+            85.35866,27.77142,0
+            85.35869,27.77145,0
+            85.35926,27.77222,0
+            85.3595,27.77255,0
+            85.35953,27.77259,0
+            85.35955,27.77263,0
+            85.35963,27.77273,0
+            85.35968,27.77281,0
+            85.35971,27.77286,0
+            85.35988,27.77312,0
+            85.36035,27.77384,0
+            85.36038,27.77389,0
+            85.36043,27.77398,0
+            85.36051,27.77411,0
+            85.36052,27.77414,0
+            85.36053,27.77415,0
+            85.36054,27.77417,0
+            85.36055,27.77418,0
+            85.36056,27.7742,0
+            85.36065,27.77432,0
+            85.36076,27.77449,0
+            85.36087,27.77467,0
+            85.3609,27.77473,0
+            85.36093,27.7748,0
+            85.36115,27.77513,0
+            85.36138,27.77555,0
+            85.36149,27.77575,0
+            85.36156,27.77588,0
+            85.36185,27.77642,0
+            85.36191,27.77655,0
+            85.36193,27.77661,0
+            85.36194,27.77666,0
+            85.36193,27.77675,0
+            85.36193,27.77677,0
+            85.36192,27.77679,0
+            85.36191,27.77682,0
+            85.36189,27.77685,0
+            85.36188,27.77687,0
+            85.36186,27.77689,0
+            85.3618,27.77695,0
+            85.36165,27.77712,0
+            85.36143,27.77738,0
+            85.36118,27.77768,0
+            85.36112,27.77775,0
+            85.36094,27.77795,0
+            85.36102,27.77798,0
           </coordinates>
         </LineString>
       </Placemark>
       <Placemark>
-        <name>Lagankhel, Lalitpur</name>
+        <name>Lagankhel Bus Station, Lalitpur</name>
         <styleUrl>#icon-1899-DB4436-nodesc</styleUrl>
         <Point>
           <coordinates>
-            85.3225522,27.6657225,0
+            85.3235278,27.6672148,0
           </coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Naya Bus Park, Kathmandu</name>
+        <name>बुढानिलकण्ठ बस स्टेशन, Golfutar Road, Budhanilkantha 44600, Nepal</name>
         <styleUrl>#icon-1899-DB4436-nodesc</styleUrl>
         <Point>
           <coordinates>
-            85.3081252,27.732393,0
+            85.3610181,27.7779793,0
           </coordinates>
         </Point>
       </Placemark>
