@@ -116,7 +116,7 @@
       </Pair>
     </StyleMap>
     <Folder>
-      <name>Untitled layer</name>
+      <name>Bus Stops</name>
       <Placemark>
         <name>Badbhanjyang Chautara</name>
         <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
@@ -1109,9 +1109,6 @@
           </coordinates>
         </Point>
       </Placemark>
-    </Folder>
-    <Folder>
-      <name>Untitled layer</name>
     </Folder>
   </Document>
 </kml>
