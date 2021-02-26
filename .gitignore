@@ -11,6 +11,8 @@ __pycache__/
 *.amlignore.*
 *.ipynb_aml_checkpoints
 *.ipynb.*
+**/*.Identifier
+*.pkl:Zone.Identifier
 
 # Distribution / packaging
 .Python
