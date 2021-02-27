@@ -1,7 +1,97 @@
-def bus_df(bus_id):
-    df = df_full[df_full['bus_id']==bus_id]
+def generate_distance(lat1, lon1, lat2, lon2):
+    """Calculate distace between two points
+
+    Args:
+        lat1 (float): latitude of first point
+        lon1 (float): longitude of first point
+        lat2 (float): latitude of second point
+        lon2 (float): longitude of second point
+
+    Returns:
+        float: distance in meters
+    """
+    R = 6371000
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = (math.sin(math.pi/180 * dlat/2))**2 + math.cos(math.pi / 180 * lat1) * \
+        math.cos(math.pi/180 * lat2) * (math.sin(math.pi/180*dlon/2))**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    d = R * c
+    return d
+
+
+def distances(lons1, lats1, lons2, lats2):
+    """Calculates distance between two array of points
+
+    Args:
+        lons1 (array): Array of first longitudes
+        lats1 (array): Array of first latitudes
+        lons2 (array): Array of second longitudes
+        lats2 (array): Array of second latitudes
+
+    Returns:
+        array: Array of distances between two array of points
+    """
+    R = 6371000
+    dlon = lons2 - lons1
+    dlat = lats2 - lats1
+    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi / 180 * lats1) * \
+        np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
+    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a))
+    d = R * c
+    return d
+
+
+def minimum_distance(lat, lon, lats2, lons2):
+    """Calculate minimum distance between point and array of points
+
+    Args:
+        lat (float): Latitude of a point
+        lon (float): Longitude of a point
+        lats2 (array): Array of latitudes
+        lons2 (array): Array of longitudes
+
+    Returns:
+        float: minimum distance
+    """
+    R = 6371000
+    l = np.ones(len(lats2))
+    lats1 = l*lat
+    lons1 = l*lon
+    dlon = lons2 - lons1
+    dlat = lats2 - lats1
+    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi / 180 * lats1) * \
+        np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
+    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a))
+    d = R * c
+    i = np.where(d == min(d))[0][0]
+    return [transit_station_names[i], min(d)]
+
+
+def minimum_distances(lats, lons):
+    distances = []
+    names = []
+    for i in range(len(lats)):
+        [name, d] = minimum_distance(lats[i], lons[i], np.array(
+            transit_station_lats), np.array(transit_station_lons))
+        distances.append(d)
+        names.append(name)
+    return [distances, names]
+
+
+def generate_bus_df(bus_id):
+    """Generate dataframe for given bus_id
+
+    Args:
+        bus_id (int): Bus ID
+
+    Returns:
+        df: Dataframe for give bus
+    """
+    df = df_full[df_full['bus_id'] == bus_id]
     df.drop_duplicates(subset='last_update', inplace=True)
     return df
+
 
 def plot_on_map(df, BB, map_, s=10, alpha=0.1):
     fig, axs = plt.subplots(figsize=(200*(BB[1]-BB[0]), 200*(BB[3]-BB[2])))
@@ -11,48 +101,63 @@ def plot_on_map(df, BB, map_, s=10, alpha=0.1):
     axs.set_title('GPS Locations')
     axs.imshow(map_, zorder=0, extent=BB)
 
-def bus_day_df(bus_id, day, plot=False, map_=False):
-    df_temp = bus_df(bus_id)
+
+def generate_bus_day_df(bus_id, day, plot=False, map_=False):
+    df_temp = generate_bus_df(bus_id)
     df_temp = df_temp[df_temp['datetime'].dt.dayofyear == day]
     ax = sns.scatterplot(data=df_temp, x='longitude', y='latitude')
     ax_d = plt.gca()
-    
+
     if not plot:
         plt.close()
 
     if map_:
         route_map = plt.imread('./Bus Routes/Lagankhel-NayaBusPark.png')
-        BB = [ax_d.get_xlim()[0], ax_d.get_xlim()[1], ax_d.get_ylim()[0], ax_d.get_ylim()[1]]
+        BB = [ax_d.get_xlim()[0], ax_d.get_xlim()[1],
+              ax_d.get_ylim()[0], ax_d.get_ylim()[1]]
         plot_on_map(df_temp, BB, route_map)
 
     return df_temp
 
-def movement_days(bus):
-    df_temp = bus_df(bus)
-    days = df_temp['datetime'].dt.dayofyear.unique()
+
+def generate_movement_days_for_bus(bus_id, distance=5000):
+    """Generate days where the bus travelled more than given distance
+
+    Args:
+        bus_id (int): Bus ID
+        distance (int, optional): Distance in meters. Defaults to 5000.
+
+    Returns:
+        list: list of days
+    """
+    bus_df = generate_bus_df(bus_id)
+    bus_days = bus_df['datetime'].dt.dayofyear.unique()
     movement_days = []
-    for day in days:
-        df_temp = bus_day_df(bus, day)
-        if df_temp.shape[0]>50:
+    for day in bus_days:
+        bus_day_df = generate_bus_day_df(bus, day)
+        if bus_day_df.shape[0] > 50:
             lat1 = df_temp['latitude'].max()
             lat2 = df_temp['latitude'].min()
             lon1 = df_temp['longitude'].max()
             lon2 = df_temp['longitude'].min()
-            if distance(lat1, lon1, lat2, lon2) > 5000:
+            if generate_distance(lat1, lon1, lat2, lon2) > distance:
                 movement_days.append(day)
     return movement_days
 
-def plot_movement(bus):
-    df_bus = bus_df(bus)
-    m_days = movement_days(bus)
-    fig, axs = plt.subplots(math.ceil(len(m_days)/3),3, figsize=(16,4*math.ceil(len(m_days)/3)), squeeze=False)
-    for i in range(len(m_days)):
-        df_temp = df_bus[df_bus['datetime'].dt.dayofyear == m_days[i]]
-        sns.scatterplot(data=df_temp, x='longitude', y='latitude', ax=axs[i//3][i%3], label=m_days[i])
-    plt.show()
-    
 
-def animate_df(df):
+def plot_movement(bus):
+    bus_df = generate_bus_df(bus)
+    m_days = generate_movement_days_for_bus(bus)
+    fig, axs = plt.subplots(math.ceil(
+        len(m_days)/3), 3, figsize=(16, 4*math.ceil(len(m_days)/3)), squeeze=False)
+    for i in range(len(m_days)):
+        df_temp = bus_df[bus_df['datetime'].dt.dayofyear == m_days[i]]
+        sns.scatterplot(data=df_temp, x='longitude', y='latitude',
+                        ax=axs[i//3][i % 3], label=m_days[i])
+    plt.show()
+
+
+def animate_f(df):
     print('For {} datapoints'.format(df.shape[0]))
     df.drop_duplicates(subset='last_update', inplace=True)
     print('For {} datapoints'.format(df.shape[0]))
@@ -67,70 +172,46 @@ def animate_df(df):
     ax.set_xlim(ax_d.get_xlim())
     ax.set_ylim(ax_d.get_ylim())
 
-    lines = plt.plot([],'o')
+    lines = plt.plot([], 'o')
     line = lines[0]
 
     def animate(frame):
         x = x_data[:frame]
         y = y_data[:frame]
-        line.set_data((x,y))
+        line.set_data((x, y))
 
     anim = FuncAnimation(fig, func=animate, frames=len(x_data), interval=100)
     video = anim.to_html5_video()
     html = display.HTML(video)
     display.display(html)
     plt.close()
-    
-    
-def bus_movement_days():
+
+
+def generate_movement_days():
+    """Generates the movement days for all buses in df_full
+
+    Returns:
+        dict: Bus_ID: movement days
+    """
     buses = df_full['bus_id'].unique()
     m_days = {}
     for bus in buses:
         print('Calculating movement days for bus {}'.format(bus))
-        m_days[bus] = movement_days(bus)
+        m_days[bus] = generate_movement_days_for_bus(bus)
     return m_days
 
-def distance(lat1, lon1, lat2, lon2):
-    R = 6371000
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = (math.sin(math.pi/180 * dlat/2))**2 + math.cos(math.pi /180 * lat1) * math.cos(math.pi/180 * lat2) * (math.sin(math.pi/180*dlon/2))**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a) )
-    d = R * c
-    return d
 
-def distances(lons1, lats1, lons2, lats2):
-    R = 6371000
-    dlon = lons2 - lons1
-    dlat = lats2 - lats1
-    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi /180 * lats1) * np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
-    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a) )
-    d = R * c
-    return d
-    
-def minimum_distance(lat, lon, lats2, lons2):
-    R = 6371000
-    l = np.ones(len(lats2))
-    lats1 = l*lat
-    lons1 = l*lon
-    dlon = lons2 - lons1
-    dlat = lats2 - lats1
-    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi /180 * lats1) * np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
-    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a) )
-    d = R * c
-    i = np.where(d == min(d))[0][0]
-    return [transit_station_names[i], min(d)]
+def generate_nearest_station(lon, lat, stations):
+    """Generate nearst station for the given point from the dataframe of all stations in the route
 
-def minimum_distances(lats, lons):
-    distances = []
-    names = []
-    for i in range(len(lats)):
-        [name, d] = minimum_distance(lats[i], lons[i], np.array(transit_station_lats), np.array(transit_station_lons))
-        distances.append(d)
-        names.append(name)
-    return [distances, names]
+    Args:
+        lon (float): longitude of point
+        lat (float): latitude of point
+        stations (df): DataFrame of stations in the route
 
-def nearest_station(lon, lat, stations):
+    Returns:
+        list: Minimum distance between the point and the nearest station, Longitude of nearest station, Latitude of nearest station
+    """
     R = 6371000
     lats2 = stations['latitude'].values
     lons2 = stations['longitude'].values
@@ -139,40 +220,64 @@ def nearest_station(lon, lat, stations):
     lons1 = l*lon
     dlon = lons2 - lons1
     dlat = lats2 - lats1
-    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi /180 * lats1) * np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
-    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a) )
+    a = (np.sin(np.pi/180 * dlat/2))**2 + np.cos(np.pi / 180 * lats1) * \
+        np.cos(np.pi/180 * lats2) * (np.sin(np.pi/180*dlon/2))**2
+    c = 2 * np.arctan(np.sqrt(a), np.sqrt(1-a))
     d = R * c
     i = np.where(d == min(d))[0][0]
     nearest_station = stations.iloc[i]
     return [min(d), nearest_station['name'], [nearest_station['longitude'], nearest_station['latitude']]]
 
-def nearest_stations(route, stations, maxDistance=100, drop_duplicates=True):
+
+def append_nearest_stations(route, stations, maxDistance=100, drop_duplicates=True):
+    """Generate nearest stations for the points in the roue
+
+    Args:
+        route (df): DataFrame of the points in route
+        stations (df): DataFrame of the stations of the route
+        maxDistance (int, optional): Distance for the point in route to be considered near the station. Defaults to 100 meters.
+        drop_duplicates (bool, optional): Check to drop duplicates of bus stations. Defaults to True.
+
+    Returns:
+        df: Returns the dataframe with info of the nearest station appended to it.
+    """
     distance_to_nearest_station = []
     nearest_station_name = []
     latitude_of_nearest_station = []
     longitude_of_nearest_station = []
-    
+
     lons = route['longitude'].values
     lats = route['latitude'].values
     for i in range(route.shape[0]):
-        [d, name, [longitude, latitude]] = nearest_station(lons[i], lats[i], stations)
+        [d, name, [longitude, latitude]] = generate_nearest_station(
+            lons[i], lats[i], stations)
         distance_to_nearest_station.append(d)
         nearest_station_name.append(name)
         longitude_of_nearest_station.append(longitude)
         latitude_of_nearest_station.append(latitude)
-        
-    route['name']= nearest_station_name
+
+    route['name'] = nearest_station_name
     route['nlongitude'] = longitude_of_nearest_station
     route['nlatitude'] = latitude_of_nearest_station
     route['distance'] = distance_to_nearest_station
-        
+
     if drop_duplicates:
         route = route[route['distance'] < maxDistance]
         return route.drop_duplicates(subset='name')
     else:
         return route
 
+
 def parse_kml(filename):
+    """Parses the kml file
+
+    Args:
+        filename (string): The full file name along with the location of the file
+
+    Returns:
+        dict: route name, route description, route stops, forward route and backward route
+    """
+
     route = {}
     with open(filename, "r") as content:
         soup = BeautifulSoup(content, "lxml-xml")
@@ -181,7 +286,7 @@ def parse_kml(filename):
     folders = soup.findAll('Folder')
 
     route_coordinates = []
-    
+
     for folder in folders:
         folder_name = folder.find('name').text
         if folder_name == 'Bus Stops':
@@ -192,80 +297,116 @@ def parse_kml(filename):
                 coordinate = point.find('coordinates').text
                 stop_names.append(stop_name)
                 stop_coordinates.append(coordinate)
-            stop_coordinates = [coordinate.split(',')[:-1] for coordinate in stop_coordinates]
-            stop_lons = np.array([float(coordinate[0]) for coordinate in stop_coordinates])
-            stop_lats = np.array([float(coordinate[1]) for coordinate in stop_coordinates])
-            route['stops'] = pd.DataFrame({'name': stop_names, 'longitude': stop_lons, 'latitude': stop_lats})       
-        
+            stop_coordinates = [coordinate.split(
+                ',')[:-1] for coordinate in stop_coordinates]
+            stop_lons = np.array([float(coordinate[0])
+                                  for coordinate in stop_coordinates])
+            stop_lats = np.array([float(coordinate[1])
+                                  for coordinate in stop_coordinates])
+            route['stops'] = pd.DataFrame(
+                {'name': stop_names, 'longitude': stop_lons, 'latitude': stop_lats})
+
         else:
-            route_coordinates = folder.find('LineString').coordinates.text.split('\n')
-            route_coordinates = [coordinate.strip() for coordinate in route_coordinates][1:-1]
-            route_coordinates = [coordinate.split(',')[:-1] for coordinate in route_coordinates]
-            route_lons = np.array([float(coordinate[0]) for coordinate in route_coordinates])
-            route_lats = np.array([float(coordinate[1]) for coordinate in route_coordinates])
-            route[folder_name] = pd.DataFrame({'longitude': route_lons, 'latitude': route_lats}) 
+            route_coordinates = folder.find(
+                'LineString').coordinates.text.split('\n')
+            route_coordinates = [coordinate.strip()
+                                 for coordinate in route_coordinates][1:-1]
+            route_coordinates = [coordinate.split(
+                ',')[:-1] for coordinate in route_coordinates]
+            route_lons = np.array([float(coordinate[0])
+                                   for coordinate in route_coordinates])
+            route_lats = np.array([float(coordinate[1])
+                                   for coordinate in route_coordinates])
+            route[folder_name] = pd.DataFrame(
+                {'longitude': route_lons, 'latitude': route_lats})
     return route
 
 
-def check_endpoint(df, endpoint0, endpoint1, cropToEndpoints=True):
-    df.sort_values(['last_update'], inplace=True)
-    df['Endpoint0'] = df['name']==endpoint0
-    df['Endpoint1'] = df['name']==endpoint1
-    df['Endpoint'] = np.logical_or(df['Endpoint0'], df['Endpoint1'])
-    df.drop(columns=['Endpoint0', 'Endpoint1'], inplace=True)
-    if cropToEndpoints:
-        start = df[df['Endpoint']==True].index[0]
-        end = df[df['Endpoint']==True].index[-1]
-        df = df.loc[start:end]
-    df.reset_index(inplace=True)
-    df.drop(columns=['index'], inplace=True)
-    
-    return df
+def append_endpoint(route_df, endpoint0, endpoint1, cropToEndpoints=True):
+    """Appends True if stop is endpoint for the given route
 
-def generate_tour_endpoints(df):
-    tour_endpoints = np.where(np.logical_xor(df['Endpoint'][:-1].values, df['Endpoint'][1:].values) == True)[0]
-    
-    tour_endpoints[1::2]+=1
-    names = df.iloc[tour_endpoints]['name'].values
+    Args:
+        route_df (df): DataFrame of given route
+        endpoint0 (str): First endpoint
+        endpoint1 (str): Second point
+        cropToEndpoints (bool, optional): If true crops to endpoint. Defaults to True.
+
+    Returns:
+        df: DataFrame with appended True/False depending if it is endpoint
+    """
+    route_df.sort_values(['last_update'], inplace=True)
+    route_df['Endpoint0'] = route_df['name'] == endpoint0
+    route_df['Endpoint1'] = route_df['name'] == endpoint1
+    route_df['Endpoint'] = np.logical_or(
+        route_df['Endpoint0'], route_df['Endpoint1'])
+    route_df.drop(columns=['Endpoint0', 'Endpoint1'], inplace=True)
+    if cropToEndpoints:
+        start = route_df[route_df['Endpoint'] == True].index[0]
+        end = route_df[route_df['Endpoint'] == True].index[-1]
+        route_df = route_df.loc[start:end]
+    route_df.reset_index(inplace=True)
+    route_df.drop(columns=['index'], inplace=True)
+
+    return route_df
+
+
+def generate_tour_endpoints(route_df):
+    tour_endpoints = np.where(np.logical_xor(
+        route_df['Endpoint'][:-1].values, route_df['Endpoint'][1:].values) == True)[0]
+
+    tour_endpoints[1::2] += 1
+    names = route_df.iloc[tour_endpoints]['name'].values
     indices = []
     for i in range(len(names)):
-        if i==0:
-            if names[i]!=names[i+1]:
+        if i == 0:
+            if names[i] != names[i+1]:
                 indices.append(i)
-        elif i==len(names)-1:
-            if names[i]!=names[i-1]:
+        elif i == len(names)-1:
+            if names[i] != names[i-1]:
                 indices.append(i)
         else:
-            if (names[i] != names[i-1] or names[i]!=names[i+1]):
+            if (names[i] != names[i-1] or names[i] != names[i+1]):
                 indices.append(i)
     tour_endpoints = tour_endpoints[indices]
 
     return tour_endpoints
 
-def generate_tours(df, endpoint0, endpoint1):
-    df_tmp = check_endpoint(df, endpoint0, endpoint1)
-    tour_endpoints = generate_tour_endpoints(df_tmp)
-    dfs = []
 
-    for i in range(0,len(tour_endpoints), 2):
-        df_temp = df_tmp.iloc[tour_endpoints[i]: tour_endpoints[i+1]+1]
-        if df_temp.shape[0]>20:
-            dfs.append(df_temp)
-    return dfs
+def generate_tours(route_df, endpoint0, endpoint1):
+    """Generate tours for given route_df when given two endpoints
+
+    Args:
+        route_df (df): DataFrame of route
+        endpoint0 (str): First endpoint
+        endpoint1 (str): Second endpoint
+
+    Returns:
+        list: List of tours
+    """
+    route_with_endpoint_df = append_endpoint(route_df, endpoint0, endpoint1)
+    tour_endpoints = generate_tour_endpoints(route_with_endpoint_df)
+    tours = []
+
+    for i in range(0, len(tour_endpoints), 2):
+        tour = route_with_endpoint_df.iloc[tour_endpoints[i]                                           : tour_endpoints[i+1]+1]
+        if tour.shape[0] > 20:
+            tours.append(tour)
+    return tours
+
 
 def generate_training_data(df_tmp):
-    df_tmp_bus_stops = df_tmp.iloc[1:-1]['distance']<100
+    df_tmp_bus_stops = df_tmp.iloc[1:-1]['distance'] < 100
     df_tmp_bus_stops = df_tmp_bus_stops.values
     df_tmp_bus_stops = np.concatenate(([True], df_tmp_bus_stops, [True]))
     df_tmp = df_tmp[df_tmp_bus_stops]
     names = df_tmp['name'].values
     indices = [0]
-    for i in range(1,len(names)-1):
-        if (names[i] != names[i-1] or names[i]!=names[i+1]):
+    for i in range(1, len(names)-1):
+        if (names[i] != names[i-1] or names[i] != names[i+1]):
             indices.append(i)
     indices.append(i+1)
     df_tmp = df_tmp.iloc[indices]
-    
+
     names_from = df_tmp['name'][:-1].values
     names_to = df_tmp['name'][1:].values
     time_from = df_tmp['last_update'][:-1].values
@@ -277,63 +418,84 @@ def generate_training_data(df_tmp):
     lats2 = df_tmp['latitude'][1:].values
     d = distances(lons1, lats1, lons2, lats2)
 
-    df = pd.DataFrame({'From':names_from, 'To': names_to, 'Start': time_from, 'End': time_to, 'Distance': d})
+    df = pd.DataFrame({'From': names_from, 'To': names_to,
+                       'Start': time_from, 'End': time_to, 'Distance': d})
     df['Time_Seconds'] = (df['End'] - df['Start']).dt.seconds
 
     return df
 
-def generate_training_data_alt(df_tmp):
-    df_tmp_bus_stops = df_tmp.iloc[1:-1]['distance']<100
-    df_tmp_bus_stops = df_tmp_bus_stops.values
-    df_tmp_bus_stops = np.concatenate(([True], df_tmp_bus_stops, [True]))
-    df_tmp = df_tmp[df_tmp_bus_stops]
-    names = df_tmp['name'].values
+
+def generate_training_data_alt(tour_df):
+    """Generates training suitable data from the given tour
+
+    Args:
+        tour_df (df): DataFrame of tour
+
+    Returns:
+        df: DataFrame of training suitable data
+    """
+    DISTANCE = 100
+    tour_df_bus_stops = tour_df.iloc[1:-1]['distance'] < DISTANCE
+    tour_df_bus_stops = tour_df_bus_stops.values
+    # First and last must be stops in the tour
+    tour_df_bus_stops = np.concatenate(([True], tour_df_bus_stops, [True]))
+    tour_df = tour_df[tour_df_bus_stops]
+    names = tour_df['name'].values
     indices = [0]
-    for i in range(1,len(names)-1):
-        if (names[i] != names[i-1] or names[i]!=names[i+1]):
+    for i in range(1, len(names)-1):
+        if (names[i] != names[i-1] or names[i] != names[i+1]):
             indices.append(i)
     indices.append(i+1)
-    df_tmp = df_tmp.iloc[indices]
-    names = df_tmp['name'].values
-    times = df_tmp['last_update'].values
-    
+    tour_df = tour_df.iloc[indices]
+    names = tour_df['name'].values
+    times = tour_df['last_update'].values
+
     dfs = []
-    
+
     for i in range(len(names)-1):
         from_ = pd.DataFrame({'from': names[i:i+1], 'Start': times[i:i+1]})
         l = len(names)-1-i
         end = len(names)
-        
+
         df = pd.concat([from_]*l)
         df['to'] = names[i+1:end]
         df['End'] = times[i+1:end]
-        df.drop_duplicates(subset=['from','to'], inplace=True)
+        df.drop_duplicates(subset=['from', 'to'], inplace=True)
         if df.iloc[0]['from'] == df.iloc[0]['to']:
             continue
         dfs.append(df)
     return pd.concat(dfs)
-    
+
+
 def generate_all_training_data():
-    movements = bus_movement_days()
+    """Generate all training data from df_full
+
+    Returns:
+        df: training suitable df
+    """
+
+    movements = generate_movement_days()
     dfs_outer = []
     for bus in movements:
         dfs_inner = []
         kml_file = 'Bus Routes/' + buses.loc[bus]['route_short'] + '.kml'
         stations_in_route = parse_kml(kml_file)['stops']
         for day in movements[bus]:
-            df = bus_day_df(bus, day)
-            df = nearest_stations(df, stations_in_route, drop_duplicates=False)
+            df = generate_bus_day_df(bus, day)
+            df = append_nearest_stations(
+                df, stations_in_route, drop_duplicates=False)
             dfs = []
-            tours = generate_tours(df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
-            print('Bus: {} - Day: {} - Tours: {}  '.format(bus,day, len(tours)))
+            tours = generate_tours(
+                df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
+            print('Bus: {} - Day: {} - Tours: {}  '.format(bus, day, len(tours)))
             for tour in tours:
                 df = generate_training_data_alt(tour)
                 dfs.append(df)
-            if len(dfs)<1:
+            if len(dfs) < 1:
                 continue
             df_inner = pd.concat(dfs)
             dfs_inner.append(df_inner)
-        if len(dfs_inner)>0:  
+        if len(dfs_inner) > 0:
             df_outer = pd.concat(dfs_inner)
             dfs_outer.append(df_outer)
     train = pd.concat(dfs_outer)
