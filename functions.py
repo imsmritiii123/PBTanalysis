@@ -134,7 +134,7 @@ def generate_movement_days_for_bus(bus_id, distance=5000):
     bus_days = bus_df['datetime'].dt.dayofyear.unique()
     movement_days = []
     for day in bus_days:
-        bus_day_df = generate_bus_day_df(bus, day)
+        bus_day_df = generate_bus_day_df(bus_id, day)
         if bus_day_df.shape[0] > 50:
             lat1 = df_temp['latitude'].max()
             lat2 = df_temp['latitude'].min()
@@ -467,7 +467,7 @@ def generate_training_data_alt(tour_df):
     return pd.concat(dfs)
 
 
-def generate_all_training_data():
+def generate_all_training_data(df_full):
     """Generate all training data from df_full
 
     Returns:
