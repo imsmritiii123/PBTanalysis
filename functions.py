@@ -361,12 +361,12 @@ def append_endpoint(route_df, endpoint0, endpoint1, cropToEndpoints=True):
     return route_df
 
 
-def generate_tour_endpoints(route_df):
-    tour_endpoints = np.where(np.logical_xor(
+def generate_trip_endpoints(route_df):
+    trip_endpoints = np.where(np.logical_xor(
         route_df['Endpoint'][:-1].values, route_df['Endpoint'][1:].values) == True)[0]
 
-    tour_endpoints[1::2] += 1
-    names = route_df.iloc[tour_endpoints]['name'].values
+    trip_endpoints[1::2] += 1
+    names = route_df.iloc[trip_endpoints]['name'].values
     indices = []
     for i in range(len(names)):
         if i == 0:
@@ -378,13 +378,13 @@ def generate_tour_endpoints(route_df):
         else:
             if (names[i] != names[i-1] or names[i] != names[i+1]):
                 indices.append(i)
-    tour_endpoints = tour_endpoints[indices]
+    trip_endpoints = trip_endpoints[indices]
 
-    return tour_endpoints
+    return trip_endpoints
 
 
-def generate_tours(route_df, endpoint0, endpoint1):
-    """Generate tours for given route_df when given two endpoints
+def generate_trips(route_df, endpoint0, endpoint1):
+    """Generate trips for given route_df when given two endpoints
 
     Args:
         route_df (df): DataFrame of route
@@ -392,19 +392,19 @@ def generate_tours(route_df, endpoint0, endpoint1):
         endpoint1 (str): Second endpoint
 
     Returns:
-        list: List of tours
+        list: List of trips
     """
-    tours = []
+    trips = []
     route_with_endpoint_df = append_endpoint(route_df, endpoint0, endpoint1)
     if route_with_endpoint_df.shape[0] < 20:
-        return tours
-    tour_endpoints = generate_tour_endpoints(route_with_endpoint_df)
+        return trips
+    trip_endpoints = generate_trip_endpoints(route_with_endpoint_df)
 
-    for i in range(0, len(tour_endpoints), 2):
-        tour = route_with_endpoint_df.iloc[tour_endpoints[i]: tour_endpoints[i+1]+1]
-        if tour.shape[0] > 20:
-            tours.append(tour)
-    return tours
+    for i in range(0, len(trip_endpoints), 2):
+        trip = route_with_endpoint_df.iloc[trip_endpoints[i]: trip_endpoints[i+1]+1]
+        if trip.shape[0] > 20:
+            trips.append(trip)
+    return trips
 
 
 def generate_training_data(df_tmp):
@@ -438,30 +438,30 @@ def generate_training_data(df_tmp):
     return df
 
 
-def generate_training_data_alt(tour_df):
-    """Generates training suitable data from the given tour
+def generate_training_data_alt(trip_df):
+    """Generates training suitable data from the given trip
 
     Args:
-        tour_df (df): DataFrame of tour
+        trip_df (df): DataFrame of trip
 
     Returns:
         df: DataFrame of training suitable data
     """
     DISTANCE = 200
-    tour_df_bus_stops = tour_df.iloc[1:-1]['distance'] < DISTANCE
-    tour_df_bus_stops = tour_df_bus_stops.values
-    # First and last must be stops in the tour
-    tour_df_bus_stops = np.concatenate(([True], tour_df_bus_stops, [True]))
-    tour_df = tour_df[tour_df_bus_stops]
-    names = tour_df['name'].values
+    trip_df_bus_stops = trip_df.iloc[1:-1]['distance'] < DISTANCE
+    trip_df_bus_stops = trip_df_bus_stops.values
+    # First and last must be stops in the trip
+    trip_df_bus_stops = np.concatenate(([True], trip_df_bus_stops, [True]))
+    trip_df = trip_df[trip_df_bus_stops]
+    names = trip_df['name'].values
     indices = [0]
     for i in range(1, len(names)-1):
         if (names[i] != names[i-1] or names[i] != names[i+1]):
             indices.append(i)
     indices.append(i+1)
-    tour_df = tour_df.iloc[indices]
-    names = tour_df['name'].values
-    times = tour_df['last_update'].values
+    trip_df = trip_df.iloc[indices]
+    names = trip_df['name'].values
+    times = trip_df['last_update'].values
 
     dfs = []
 
@@ -498,12 +498,12 @@ def generate_all_training_data(df_full, buses):
             df = append_nearest_stations(
                 df, stations_in_route, drop_duplicates=False)
             dfs = []
-            tours = generate_tours(
+            trips = generate_trips(
                 df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
-            print('Bus: {} - Day: {} - Tours: {}  '.format(bus, m_day, len(tours)))
-            for tour in tours:
-                if tour.shape[0] > 10:
-                    df = generate_training_data_alt(tour)
+            print('Bus: {} - Day: {} - Tours: {}  '.format(bus, m_day, len(trips)))
+            for trip in trips:
+                if trip.shape[0] > 10:
+                    df = generate_training_data_alt(trip)
                     dfs.append(df)
             if len(dfs) < 1:
                 continue
