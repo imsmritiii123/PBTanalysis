@@ -136,10 +136,10 @@ def generate_movement_days_for_bus(bus_id, distance=5000):
     for day in bus_days:
         bus_day_df = generate_bus_day_df(bus_id, day)
         if bus_day_df.shape[0] > 50:
-            lat1 = df_temp['latitude'].max()
-            lat2 = df_temp['latitude'].min()
-            lon1 = df_temp['longitude'].max()
-            lon2 = df_temp['longitude'].min()
+            lat1 = bus_day_df['latitude'].max()
+            lat2 = bus_day_df['latitude'].min()
+            lon1 = bus_day_df['longitude'].max()
+            lon2 = bus_day_df['longitude'].min()
             if generate_distance(lat1, lon1, lat2, lon2) > distance:
                 movement_days.append(day)
     return movement_days
