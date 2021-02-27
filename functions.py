@@ -1,3 +1,7 @@
+import math
+import numpy as np
+
+
 def generate_distance(lat1, lon1, lat2, lon2):
     """Calculate distace between two points
 
@@ -233,7 +237,7 @@ def generate_nearest_station(lon, lat, stations):
     return [min(d), nearest_station['name'], [nearest_station['longitude'], nearest_station['latitude']]]
 
 
-def append_nearest_stations(route, stations, maxDistance=100, drop_duplicates=True):
+def append_nearest_stations(route, stations, maxDistance=150, drop_duplicates=True):
     """Generate nearest stations for the points in the roue
 
     Args:
@@ -249,7 +253,7 @@ def append_nearest_stations(route, stations, maxDistance=100, drop_duplicates=Tr
     nearest_station_name = []
     latitude_of_nearest_station = []
     longitude_of_nearest_station = []
-
+    route.sort_values('last_update', inplace=True)
     lons = route['longitude'].values
     lats = route['latitude'].values
     for i in range(route.shape[0]):
@@ -338,12 +342,15 @@ def append_endpoint(route_df, endpoint0, endpoint1, cropToEndpoints=True):
     Returns:
         df: DataFrame with appended True/False depending if it is endpoint
     """
+    print(route_df.shape)
     route_df.sort_values(['last_update'], inplace=True)
     route_df['Endpoint0'] = route_df['name'] == endpoint0
     route_df['Endpoint1'] = route_df['name'] == endpoint1
     route_df['Endpoint'] = np.logical_or(
         route_df['Endpoint0'], route_df['Endpoint1'])
     route_df.drop(columns=['Endpoint0', 'Endpoint1'], inplace=True)
+    if route_df['Endpoint'].sum() < 2:
+        return route_df.iloc[0]
     if cropToEndpoints:
         start = route_df[route_df['Endpoint'] == True].index[0]
         end = route_df[route_df['Endpoint'] == True].index[-1]
@@ -387,13 +394,14 @@ def generate_tours(route_df, endpoint0, endpoint1):
     Returns:
         list: List of tours
     """
-    route_with_endpoint_df = append_endpoint(route_df, endpoint0, endpoint1)
-    tour_endpoints = generate_tour_endpoints(route_with_endpoint_df)
     tours = []
+    route_with_endpoint_df = append_endpoint(route_df, endpoint0, endpoint1)
+    if route_with_endpoint_df.shape[0] < 20:
+        return tours
+    tour_endpoints = generate_tour_endpoints(route_with_endpoint_df)
 
     for i in range(0, len(tour_endpoints), 2):
-        tour = route_with_endpoint_df.iloc[tour_endpoints[i]
-            : tour_endpoints[i+1]+1]
+        tour = route_with_endpoint_df.iloc[tour_endpoints[i]: tour_endpoints[i+1]+1]
         if tour.shape[0] > 20:
             tours.append(tour)
     return tours
@@ -439,7 +447,7 @@ def generate_training_data_alt(tour_df):
     Returns:
         df: DataFrame of training suitable data
     """
-    DISTANCE = 100
+    DISTANCE = 200
     tour_df_bus_stops = tour_df.iloc[1:-1]['distance'] < DISTANCE
     tour_df_bus_stops = tour_df_bus_stops.values
     # First and last must be stops in the tour
@@ -472,7 +480,7 @@ def generate_training_data_alt(tour_df):
     return pd.concat(dfs)
 
 
-def generate_all_training_data(df_full):
+def generate_all_training_data(df_full, buses):
     """Generate all training data from df_full
 
     Returns:
@@ -481,6 +489,7 @@ def generate_all_training_data(df_full):
 
     [movements, m_days] = generate_movement_days(df_full)
     dfs_outer = []
+    bus_ids = []
     for bus in movements:
         dfs_inner = []
         kml_file = 'Bus Routes/' + buses.loc[bus]['route_short'] + '.kml'
@@ -493,8 +502,9 @@ def generate_all_training_data(df_full):
                 df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
             print('Bus: {} - Day: {} - Tours: {}  '.format(bus, m_day, len(tours)))
             for tour in tours:
-                df = generate_training_data_alt(tour)
-                dfs.append(df)
+                if tour.shape[0] > 10:
+                    df = generate_training_data_alt(tour)
+                    dfs.append(df)
             if len(dfs) < 1:
                 continue
             df_inner = pd.concat(dfs)
@@ -502,6 +512,10 @@ def generate_all_training_data(df_full):
         if len(dfs_inner) > 0:
             df_outer = pd.concat(dfs_inner)
             dfs_outer.append(df_outer)
+
+            bus_id = [bus] * df_outer.shape[0]
+            bus_ids.append(bus_id)
+
     train = pd.concat(dfs_outer)
     train['Segment'] = train['from'] + ' - ' + train['to']
     train.set_index('Segment', inplace=True)
