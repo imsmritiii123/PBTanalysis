@@ -120,7 +120,7 @@ def generate_bus_day_df(bus_id, day, plot=False, map_=False):
     return df_temp
 
 
-def generate_movement_days_for_bus(bus_id, distance=5000):
+def generate_movement_days_for_bus(bus_df, distance=5000):
     """Generate days where the bus travelled more than given distance
 
     Args:
@@ -130,19 +130,21 @@ def generate_movement_days_for_bus(bus_id, distance=5000):
     Returns:
         list: list of days
     """
-    bus_df = generate_bus_df(bus_id)
+    bus_df = bus_df.drop_duplicates(subset='last_update')
     bus_days = bus_df['datetime'].dt.dayofyear.unique()
+    movement_dfs = []
     movement_days = []
     for day in bus_days:
-        bus_day_df = generate_bus_day_df(bus_id, day)
+        bus_day_df = bus_df[bus_df['datetime'].dt.dayofyear == day]
         if bus_day_df.shape[0] > 50:
             lat1 = bus_day_df['latitude'].max()
             lat2 = bus_day_df['latitude'].min()
             lon1 = bus_day_df['longitude'].max()
             lon2 = bus_day_df['longitude'].min()
             if generate_distance(lat1, lon1, lat2, lon2) > distance:
+                movement_dfs.append(bus_day_df)
                 movement_days.append(day)
-    return movement_days
+    return [movement_dfs, movement_days]
 
 
 def plot_movement(bus):
@@ -187,18 +189,20 @@ def animate_f(df):
     plt.close()
 
 
-def generate_movement_days():
+def generate_movement_days(raw_df):
     """Generates the movement days for all buses in df_full
 
     Returns:
         dict: Bus_ID: movement days
     """
-    buses = df_full['bus_id'].unique()
+    buses = raw_df['bus_id'].unique()
     m_days = {}
+    m_dfs = {}
     for bus in buses:
+        bus_df = raw_df[raw_df['bus_id'] == bus]
         print('Calculating movement days for bus {}'.format(bus))
-        m_days[bus] = generate_movement_days_for_bus(bus)
-    return m_days
+        [m_dfs[bus], m_days[bus]] = generate_movement_days_for_bus(bus_df)
+    return [m_dfs, m_days]
 
 
 def generate_nearest_station(lon, lat, stations):
@@ -388,7 +392,8 @@ def generate_tours(route_df, endpoint0, endpoint1):
     tours = []
 
     for i in range(0, len(tour_endpoints), 2):
-        tour = route_with_endpoint_df.iloc[tour_endpoints[i]                                           : tour_endpoints[i+1]+1]
+        tour = route_with_endpoint_df.iloc[tour_endpoints[i]
+            : tour_endpoints[i+1]+1]
         if tour.shape[0] > 20:
             tours.append(tour)
     return tours
@@ -474,20 +479,19 @@ def generate_all_training_data(df_full):
         df: training suitable df
     """
 
-    movements = generate_movement_days()
+    [movements, m_days] = generate_movement_days(df_full)
     dfs_outer = []
     for bus in movements:
         dfs_inner = []
         kml_file = 'Bus Routes/' + buses.loc[bus]['route_short'] + '.kml'
         stations_in_route = parse_kml(kml_file)['stops']
-        for day in movements[bus]:
-            df = generate_bus_day_df(bus, day)
+        for df, m_day in zip(movements[bus], m_days[bus]):
             df = append_nearest_stations(
                 df, stations_in_route, drop_duplicates=False)
             dfs = []
             tours = generate_tours(
                 df, stations_in_route['name'].iloc[0], stations_in_route['name'].iloc[-1])
-            print('Bus: {} - Day: {} - Tours: {}  '.format(bus, day, len(tours)))
+            print('Bus: {} - Day: {} - Tours: {}  '.format(bus, m_day, len(tours)))
             for tour in tours:
                 df = generate_training_data_alt(tour)
                 dfs.append(df)
