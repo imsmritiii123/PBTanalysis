@@ -313,6 +313,30 @@ def check():
     return dfs[bus_id].iloc[UPDATE_NUMBER-1].to_json()
 
 
+@app.route('/buses')
+def show_buses():
+    return jsonify(getPositions(getData()))
+
+
+@app.route('/active_buses')
+def show_active_buses():
+    active_buses = []
+    for bus in dfs:
+        df = dfs[bus]
+        if df['active'].iloc[UPDATE_NUMBER-1] == True:
+            active_buses.append({
+                'bus_id': int(bus),
+                'datetime': df['datetime'].iloc[UPDATE_NUMBER-1],
+                'latitude': df['latitude'].iloc[UPDATE_NUMBER-1],
+                'longitude': df['longitude'].iloc[UPDATE_NUMBER-1],
+                'last_update': df['last_update'].iloc[UPDATE_NUMBER-1],
+                'fixtime': df['fix_time'].iloc[UPDATE_NUMBER-1],
+                'nearest_stop': df['nearest_stop'].iloc[UPDATE_NUMBER-1],
+                'trip': df['trip'].iloc[UPDATE_NUMBER-1]
+            })
+    return jsonify(active_buses)
+
+
 @ app.route('/predict', methods=['POST'])
 def predict():
     A = request.args.get('from')
@@ -328,7 +352,7 @@ if __name__ == "__main__":
     scheduler.add_job(
         add_positions_five,
         trigger="cron",
-        second="*/5",
+        second="*/25",
         minute="*",
         hour="*",
         day="*",
